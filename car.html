@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Şaheser Ahlat | Premium Auto Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS Değişkenleri */
+        :root{
+            --bg: #050507;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-hover: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.1);
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --shadow: 0 20px 40px rgba(0,0,0,0.6);
+            --blur: blur(12px);
+        }
+
+        /* Temel Ayarlar */
+        * { box-sizing: border-box; margin:0; padding:0; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--text);
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.15) 0%, transparent 25%);
+            overflow-x: hidden;
+        }
+
+        h1,h2,h3 { font-family: 'Outfit', sans-serif; font-weight: 700; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* --- NAVIGATION --- */
+        .nav {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            padding: 20px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(5, 5, 7, 0.6);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            transition: 0.4s;
+        }
+        .nav.scrolled { padding: 15px 5%; background: rgba(5, 5, 7, 0.95); }
+
+        .logo {
+            font-size: 1.8rem; font-weight: 900;
+            background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { font-weight: 500; position: relative; font-size: 0.95rem; opacity: 0.8; }
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0; height: 2px;
+            bottom: -5px; left: 0; background: var(--secondary);
+            transition: 0.3s;
+        }
+        .nav-links a:hover { opacity: 1; color: var(--secondary); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; }
+
+        /* --- HERO SECTION --- */
+        header.hero {
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; position: relative; overflow: hidden; padding: 0 20px;
+        }
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            filter: brightness(0.3); transform: scale(1.1);
+            transition: transform 0.1s linear; z-index: 0;
+            overflow: hidden;
+        }
+        .hero-video {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; animation: fadeInUp 1s ease forwards; }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            line-height: 1.1; margin-bottom: 20px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .gradient-text { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.2rem; color: var(--muted); margin-bottom: 40px; font-weight: 300; }
+
+        .cta-group { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        
+        .btn {
+            padding: 12px 35px; border-radius: 50px; font-weight: 600;
+            border: none; cursor: pointer; transition: all 0.3s ease;
+            position: relative; overflow: hidden; z-index: 1;
+        }
+        .btn-primary { background: var(--gradient); color: white; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(236, 72, 153, 0.4); }
+        .btn-outline { 
+            background: transparent; border: 1px solid rgba(255,255,255,0.3); color: white; 
+        }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+        /* --- GALLERY --- */
+        section { padding: 100px 5%; max-width: 1400px; margin: 0 auto; }
+        .section-title { text-align: center; margin-bottom: 60px; }
+        .section-title h2 { font-size: 2.5rem; margin-bottom: 10px; }
+        .section-title span { width: 60px; height: 4px; background: var(--gradient); display: block; margin: 0 auto; border-radius: 2px; }
+
+        .filter-btns { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 8px 20px; background: var(--glass); border: 1px solid var(--border);
+            color: var(--muted); border-radius: 30px; cursor: pointer; transition: 0.3s;
+        }
+        .filter-btn.active, .filter-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+
+        .card {
+            background: var(--glass); border: 1px solid var(--border);
+            border-radius: 20px; overflow: hidden; position: relative;
+            backdrop-filter: blur(10px); transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .card.hidden { display: none; } /* Filtreleme için */
+
+        .card:hover {transform: translateY(-5px); box-shadow: 0 20px 50px rgba(99,102,241,0.2);}
+        .card-img-box { height: 220px; overflow: hidden; position: relative; }
+        .card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .card:hover img { transform: scale(1.1); }
+        .card-content { padding: 25px; position: relative; z-index: 2; }
+        .card-tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 10px; display: block; font-weight: 700; }
+        .card h3 { margin-bottom: 10px; font-size: 1.5rem; }
+        .card-specs { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--muted); }
+        .card-specs i { margin-right: 5px; color: var(--primary); }
+
+        /* --- FEATURES --- */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .feature-box {
+            padding: 40px; background: var(--glass); border-radius: 20px; border: 1px solid var(--border);
+            text-align: center; transition: 0.3s;
+        }
+        .feature-box:hover { transform: translateY(-10px); background: var(--glass-hover); border-color: var(--primary); }
+        .feature-icon { font-size: 2.5rem; color: var(--secondary); margin-bottom: 20px; }
+
+        /* --- CONTACT FORM --- */
+        .contact-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;
+            background: var(--glass); padding: 50px; border-radius: 30px; border: 1px solid var(--border);
+        }
+        .contact-info h3 { font-size: 2rem; margin-bottom: 20px; }
+        .contact-item { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; font-size: 1.1rem; }
+        .contact-item i { width: 40px; height: 40px; background: var(--glass-hover); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent); }
+
+        form { display: flex; flex-direction: column; gap: 20px; }
+        input, textarea {
+            width: 100%; padding: 15px; background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border); border-radius: 10px;
+            color: white; font-family: inherit; transition: 0.3s;
+        }
+        input:focus, textarea:focus { outline: none; border-color: var(--primary); background: rgba(0,0,0,0.5); }
+
+        /* --- FOOTER --- */
+        footer {
+            background: #000; padding: 50px 5%; text-align: center;
+            border-top: 1px solid var(--border); margin-top: 50px;
+        }
+        .socials { margin: 20px 0; }
+        .socials a {
+            width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
+            border: 1px solid var(--border); border-radius: 50%; margin: 0 5px; transition: 0.3s; color: white;
+        }
+        .socials a:hover { background: var(--primary); border-color: var(--primary); transform: scale(1.1); }
+        .copyright { color: var(--muted); font-size: 0.9rem; }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .modal-overlay.open { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: #111; width: 90%; max-width: 800px; border-radius: 20px;
+            overflow: hidden; border: 1px solid var(--border); position: relative;
+            transform: scale(0.8); transition: 0.3s; display: grid; grid-template-columns: 1fr 1fr;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+        .modal-overlay.open .modal-content { transform: scale(1); }
+        .modal-img { width: 100%; height: 100%; object-fit: cover; min-height: 300px; }
+        .modal-details { padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+        .modal-details h3 { font-size: 2rem; margin-bottom: 10px; color: var(--primary); }
+        .modal-details h4 { color: var(--text); margin-bottom: 15px; font-weight: 500; }
+        .modal-details p { color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+        .close-modal {
+            position: absolute; top: 15px; right: 20px; font-size: 2rem;
+            cursor: pointer; z-index: 10; color: white; transition: 0.3s;
+        }
+        .close-modal:hover { color: var(--secondary); transform: rotate(90deg); }
+
+        /* --- TOAST --- */
+        .toast {
+            position: fixed; bottom: 30px; right: 30px;
+            background: rgba(20, 20, 25, 0.9); backdrop-filter: blur(10px);
+            padding: 15px 25px; border-radius: 10px; border-left: 4px solid var(--accent);
+            transform: translateX(200%); transition: 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); z-index: 2000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: white; display: flex; align-items: center; gap: 10px;
+        }
+        .toast.show { transform: translateX(0); }
+
+        /* Responsive */
+        @media(max-width: 768px){
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 80%; height: 100vh;
+                background: #000; flex-direction: column; justify-content: center;
+                align-items: center; transition: 0.4s; z-index: 99; border-left: 1px solid var(--border);
+            }
+            .nav-links.active { right: 0; }
+            .menu-toggle { display: block; z-index: 101; }
+            .contact-container { grid-template-columns: 1fr; padding: 30px; }
+            .modal-content { grid-template-columns: 1fr; max-height: 90vh; overflow-y: auto; }
+            .modal-img { height: 250px; }
+        }
+        
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<nav class="nav" id="navbar">
+    <div class="logo">ŞAHESER AHLAT</div>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="#home" onclick="toggleMenu()">Ana Sayfa</a></li>
+        <li><a href="#gallery" onclick="toggleMenu()">Koleksiyon</a></li>
+        <li><a href="#features" onclick="toggleMenu()">Ayrıcalıklar</a></li>
+        <li><a href="#contact" onclick="toggleMenu()">İletişim</a></li>
+    </ul>
+    <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+</nav>
+
+<header id="home" class="hero">
+    <div class="hero-bg">
+        <video autoplay muted loop playsinline class="hero-video">
+            <source src="video.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="hero-content">
+        <h1>Hayallerinizin Ötesinde <br><span class="gradient-text">Bir Sürüş Deneyimi</span></h1>
+        <p>Şaheser Ahlat, sadece araba satmıyor; güç, estetik ve teknolojinin mükemmel uyumunu sunuyor. Geleceğin direksiyonuna bugün geçin.</p>
+        <div class="cta-group">
+            <a href="#gallery" class="btn btn-primary">Koleksiyonu Keşfet</a>
+            <a href="#contact" class="btn btn-outline">Randevu Al</a>
+        </div>
+    </div>
+</header>
+
+<section id="gallery">
+    <div class="section-title">
+        <h2>Seçkin Modeller</h2>
+        <span></span>
+    </div>
+
+    <div class="filter-btns">
+        <button class="filter-btn active" onclick="filterCars('all', this)">Tümü</button>
+        <button class="filter-btn" onclick="filterCars('sport', this)">Spor</button>
+        <button class="filter-btn" onclick="filterCars('suv', this)">SUV</button>
+        <button class="filter-btn" onclick="filterCars('electric', this)">Elektrikli</button>
+    </div>
+
+    <div class="grid" id="carGrid">
+        <div class="card" data-category="sport" onclick="openModal('Şaheser GT', '3.2sn 0-100km | 650 HP', 'Safkan bir yarış atı. Karbon fiber gövde, aerodinamik tasarım ve V8 motorun kükremesi. Sınırlı üretim.', 'https://images.unsplash.com/photo-1617788138017-80ad40651399?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')">
+            <div class="card-img-box">
+                <img src="https://images.unsplash.com/photo-1617788138017-80ad40651399?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Şaheser GT">
+            </div>
+            <div class="card-content">
+                <span class="card-tag">Spor</span>
+                <h3>Şaheser GT</h3>
+                <div class="card-specs">
+                    <span><i class="fas fa-tachometer-alt"></i> 320 km/h</span>
+                    <span><i class="fas fa-gas-pump"></i> Benzin</span>
+                    <span><i class="fas fa-cogs"></i> Auto</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" data-category="electric" onclick="openModal('Nebula RS', 'Elektrikli | 500km Menzil', 'Sessizliğin gücü. Geleceğin teknolojisi ile donatılmış, sıfır emisyonlu ultra lüks sedan. Hızlı şarj özelliği.', 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')">
+            <div class="card-img-box">
+                <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Nebula RS">
+            </div>
+            <div class="card-content">
+                <span class="card-tag">Elektrikli</span>
+                <h3>Nebula RS</h3>
+                <div class="card-specs">
+                    <span><i class="fas fa-bolt"></i> 500 km</span>
+                    <span><i class="fas fa-charging-station"></i> Elektrik</span>
+                    <span><i class="fas fa-microchip"></i> AI Pilot</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" data-category="suv" onclick="openModal('Titan X', 'Arazinin Kralı | 4x4', 'Her türlü arazi koşulunda üstün konfor ve güvenlik. Aileler ve maceraperestler için ideal. Zırhlı opsiyonu mevcuttur.', 'https://images.unsplash.com/photo-1519245659620-e859806a8d3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')">
+            <div class="card-img-box">
+                <img src="https://images.unsplash.com/photo-1519245659620-e859806a8d3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Titan X">
+            </div>
+            <div class="card-content">
+                <span class="card-tag">SUV</span>
+                <h3>Titan X</h3>
+                <div class="card-specs">
+                    <span><i class="fas fa-mountain"></i> 4x4</span>
+                    <span><i class="fas fa-users"></i> 7 Koltuk</span>
+                    <span><i class="fas fa-shield-alt"></i> Zırhlı</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" data-category="electric" onclick="openModal('Ion Stream', 'Konsept | 2.1sn 0-100km', 'Fizik kurallarını zorlayan hızlanma ve fütüristik iç mekan tasarımı. Tamamen otonom sürüş yeteneği.', 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80')">
+            <div class="card-img-box">
+                <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Ion Stream">
+            </div>
+            <div class="card-content">
+                <span class="card-tag">Elektrikli</span>
+                <h3>Ion Stream</h3>
+                <div class="card-specs">
+                    <span><i class="fas fa-stopwatch"></i> 2.1 sn</span>
+                    <span><i class="fas fa-plug"></i> Hızlı Şarj</span>
+                    <span><i class="fas fa-rocket"></i> Aero</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="features">
+    <div class="section-title">
+        <h2>Hizmet Standartlarımız</h2>
+        <span></span>
+    </div>
+    <div class="features-grid">
+        <div class="feature-box">
+            <i class="fas fa-gem feature-icon"></i>
+            <h3>Premium Ekspertiz</h3>
+            <p>Her aracımız, 101 nokta kontrolünden geçer ve uluslararası geçerliliğe sahip sertifikalarla sunulur.</p>
+        </div>
+        <div class="feature-box">
+            <i class="fas fa-hand-holding-dollar feature-icon"></i>
+            <h3>Kişiye Özel Finansman</h3>
+            <p>Size en uygun ödeme planını oluşturmak için finans uzmanlarımız 7/24 hizmetinizde.</p>
+        </div>
+        <div class="feature-box">
+            <i class="fas fa-user-shield feature-icon"></i>
+            <h3>VIP Satış Sonrası</h3>
+            <p>Satış bittiğinde dostluğumuz başlar. 2 yıl ücretsiz bakım ve yol yardım desteği.</p>
+        </div>
+    </div>
+</section>
+
+<section id="contact">
+    <div class="contact-container">
+        <div class="contact-info">
+            <h3>Bizimle Tanışın</h3>
+            <p style="color:var(--muted); margin-bottom:30px;">Hayalinizdeki araca bir adım uzaktasınız. Showroom'umuzu ziyaret edin veya formu doldurun.</p>
+            
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Lorem ipsum dolor sit amet.</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <span>+90 000 000 0000</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <span>lorem@lorem.com</span>
+            </div>
+        </div>
+
+        <form onsubmit="handleForm(event)">
+            <input type="text" placeholder="Adınız Soyadınız" required>
+            <input type="email" placeholder="E-Posta Adresiniz" required>
+            <textarea rows="4" placeholder="İlgilendiğiniz model veya mesajınız..." required></textarea>
+            <button type="submit" class="btn btn-primary">Gönder <i class="fas fa-paper-plane"></i></button>
+        </form>
+    </div>
+</section>
+
+<footer>
+    <div class="logo" style="font-size: 1.5rem; margin-bottom: 20px;">ŞAHESER AHLAT</div>
+    <div class="socials">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+    </div>
+    <p class="copyright">&copy; 2024 Şaheser Ahlat Auto Gallery. Tüm hakları saklıdır.</p>
+</footer>
+
+<div class="modal-overlay" id="carModal">
+    <div class="modal-content">
+        <div class="close-modal" onclick="closeModal()">&times;</div>
+        <img src="" alt="Car Detail" class="modal-img" id="modalImg">
+        <div class="modal-details">
+            <h3 id="modalTitle">Araç Adı</h3>
+            <h4 id="modalSubtitle">Özellikler</h4>
+            <p id="modalDesc">Açıklama</p>
+            <a href="#contact" class="btn btn-primary" onclick="closeModal()">İlgileniyorum</a>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle" style="color: #4ade80;"></i>
+    <span>Mesajınız başarıyla gönderildi!</span>
+</div>
+
+<script>
+    // Navbar Scroll Efekti
+    window.addEventListener('scroll', function(){
+        const nav = document.getElementById('navbar');
+        if(window.scrollY > 50){
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+
+    // Mobil Menü Aç/Kapa
+    function toggleMenu(){
+        const navLinks = document.getElementById('navLinks');
+        navLinks.classList.toggle('active');
+    }
+
+    // Araç Filtreleme
+    function filterCars(category, btn){
+        // Buton aktiflik durumu
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Kartları gizle/göster
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            if(category === 'all' || card.getAttribute('data-category') === category){
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+    }
+
+    // Modal (Pop-up) Açma
+    function openModal(title, subtitle, desc, imgSrc){
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalSubtitle').innerText = subtitle;
+        document.getElementById('modalDesc').innerText = desc;
+        document.getElementById('modalImg').src = imgSrc;
+        
+        document.getElementById('carModal').classList.add('open');
+    }
+
+    // Modal Kapatma
+    function closeModal(){
+        document.getElementById('carModal').classList.remove('open');
+    }
+
+    // Modal dışına tıklayınca kapatma
+    document.getElementById('carModal').addEventListener('click', function(e){
+        if(e.target === this){
+            closeModal();
+        }
+    });
+
+    // Form Gönderme (Simülasyon)
+    function handleForm(e){
+        e.preventDefault(); // Sayfa yenilenmesini engelle
+        
+        // Form verilerini temizle>
+        e.target.reset();
+
+        // Toast bildirimi göster
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+
+        // 3 saniye sonra bildirimi gizle
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+</script>
+
+</body>
+</html>
